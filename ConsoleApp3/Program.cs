@@ -201,23 +201,18 @@ namespace ConsoleApp3
             PrintEmpty(cells);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            StarBattle(flattened, 0);
+            StarBattle(flattened);
             stopwatch.Stop();
             Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
             Console.WriteLine(_searched);
             Print(flattened);
         }
 
-        static void StarBattle(Cell[] cells, int depth)
+        static void StarBattle(Cell[] cells)
         {
             // Print(cells);
 
             _searched += 1;
-
-            if (_searched % 1000000 == 0)
-            {
-                Console.WriteLine(_searched);
-            }
 
             List<Cell> options = new List<Cell>();
             int[] row = new int[s];
@@ -264,13 +259,13 @@ namespace ConsoleApp3
             }
 
             Cell cell = PickBestOption(options, row, col, reg);
-            
+
             while (options.Any())
             {
                 cell.MakeStar();
                 _stars += 1;
 
-                StarBattle(cells, depth + 1);
+                StarBattle(cells);
 
                 if (_stars == _total)
                 {
@@ -407,35 +402,6 @@ namespace ConsoleApp3
             }
 
             Console.WriteLine();
-        }
-    }
-
-    internal class OptionsComparer : IComparer<Cell>
-    {
-        public int Compare(Cell? x, Cell? y)
-        {
-            int o1 = 0;
-            int o2 = 0;
-
-            return x.RowIdx.CompareTo(y.RowIdx);
-
-            for (int i = 0; i < x.Neighbors.Count; i++)
-            {
-                if (Program.IsCandidate(x.Neighbors[i]))
-                {
-                    o1 += 1;
-                }
-            }
-
-            for (int i = 0; i < y.Neighbors.Count; i++)
-            {
-                if (Program.IsCandidate(y.Neighbors[i]))
-                {
-                    o2 += 1;
-                }
-            }
-
-            return o1.CompareTo(o2);
         }
     }
 }
